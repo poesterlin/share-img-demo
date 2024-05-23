@@ -17,6 +17,7 @@ async function generateShareImage() {
 
   // send data to the worker
   worker.postMessage({
+    text: "Check out Web Share API",
     images: [
       "/img/parallax0.png",
       "/img/parallax1.png",
