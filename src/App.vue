@@ -6,7 +6,7 @@ import type { SharePayload } from './share-img-worker';
 import ShareWorker from './share-img-worker?worker';
 
 const image = ref<string | null>(null);
-const type = ref<'profile' | 'share' | 'cleanup'>('cleanup');
+const type = ref<'profile' | 'share' | 'cleanup'>('profile');
 
 watch(type, (newType) => {
   if (newType === 'share') {
@@ -17,8 +17,8 @@ watch(type, (newType) => {
         team: "test"
       },
       share: {
-        area: 8,
-        volume: 8
+        area: random(1000),
+        volume: random(1000),
       }
     });
   }
@@ -31,11 +31,11 @@ watch(type, (newType) => {
         team: "test"
       },
       cleanup: {
-        area: 8,
-        volume: 8,
-        impact: 8,
+        area: random(1000),
+        volume: random(1000),
+        impact: random(100000),
         name: "test",
-        participants: 8
+        participants: random(1000)
       }
     });
   }
@@ -46,12 +46,12 @@ watch(type, (newType) => {
       profile: {
         name: "test",
         team: "test",
-        level: 8
+        level: random(50)
       },
       monster: Math.floor(Math.random() * 4 + 1),
       share: {
-        area: 8,
-        volume: 8
+        area: random(100),
+        volume: random(10)
       }
     });
   }
@@ -99,6 +99,10 @@ async function share(event: MessageEvent) {
     files: [file]
   });
 };
+
+function random(max: number) {
+  return Math.floor(Math.random() * max + 1);
+}
 </script>
 
 <template>
