@@ -1,10 +1,64 @@
 <script setup lang="ts">
+import { ref, watch } from 'vue';
 import type { SharePayload } from './share-img-worker';
 
 // Import the file as a worker
 import ShareWorker from './share-img-worker?worker';
 
-async function generateShareImage() {
+const image = ref<string | null>(null);
+const type = ref<'profile' | 'share' | 'cleanup'>('cleanup');
+
+watch(type, (newType) => {
+  if (newType === 'share') {
+    generateShareImage(displayImage, {
+      type: 'share',
+      profile: {
+        name: "test",
+        team: "test"
+      },
+      share: {
+        area: 8,
+        volume: 8
+      }
+    });
+  }
+
+  if (newType === 'cleanup') {
+    generateShareImage(displayImage, {
+      type: 'cleanup',
+      profile: {
+        name: "test",
+        team: "test"
+      },
+      cleanup: {
+        area: 8,
+        volume: 8,
+        impact: 8,
+        name: "test",
+        participants: 8
+      }
+    });
+  }
+
+  if (newType === 'profile') {
+    generateShareImage(displayImage, {
+      type: 'profile',
+      profile: {
+        name: "test",
+        team: "test",
+        level: 8
+      },
+      monster: Math.floor(Math.random() * 4 + 1),
+      share: {
+        area: 8,
+        volume: 8
+      }
+    });
+  }
+}, { immediate: true });
+
+
+async function generateShareImage(callback: (event: MessageEvent) => void, data: SharePayload) {
   if (!('share' in navigator)) {
     alert('Web Share API not supported')
     return
@@ -13,22 +67,19 @@ async function generateShareImage() {
   const worker = new ShareWorker();
 
   // listen for the worker to send back the data
-  worker.onmessage = share;
+  worker.onmessage = callback;
 
   // send data to the worker
-  worker.postMessage({
-    text: "Check out Web Share API",
-    images: [
-      "/img/parallax0.png",
-      "/img/parallax1.png",
-      "/img/parallax2.png",
-      "/img/parallax3.png",
-      "/img/parallax4.png",
-      "/img/parallax5.png",
-      "/img/parallax6.png",
-      "/img/parallax7.png",
-    ]
-  } satisfies SharePayload);
+  worker.postMessage(data);
+}
+
+async function displayImage(event: MessageEvent) {
+  if (typeof event.data !== "string") {
+    return;
+  }
+
+  const dataUrl = event.data;
+  image.value = dataUrl;
 }
 
 async function share(event: MessageEvent) {
@@ -53,10 +104,12 @@ async function share(event: MessageEvent) {
 <template>
   <main>
     <h1>Overlay PNG Layers and Share</h1>
-    <div>
-      <img v-for="i in 8" :key="i" :src="`/img/parallax${i}.png`" alt="parallax" />
-    </div>
-    <button @click="generateShareImage">Share Stacked Images</button>
+    <nav>
+      <button @click="type = 'profile'">Profile</button>
+      <button @click="type = 'share'">Share</button>
+      <button @click="type = 'cleanup'">Cleanup</button>
+    </nav>
+    <img v-if="image" :src="image" alt="monster" />
   </main>
 </template>
 
@@ -84,6 +137,7 @@ img {
   margin: auto;
   display: block;
   border: 3px solid black;
+  width: 80vh;
 }
 
 button {
