@@ -13,8 +13,8 @@ watch(type, (newType) => {
     generateShareImage(displayImage, {
       type: 'share',
       profile: {
-        name: "testalskdfjlaksjdflasdfaaj",
-        team: "testalsdkjflask"
+        name: "this is a very long name that should be scaled down",
+        team: "very cool team"
       },
       share: {
         area: random(1000),
@@ -27,14 +27,14 @@ watch(type, (newType) => {
     generateShareImage(displayImage, {
       type: 'cleanup',
       profile: {
-        name: "test",
-        team: "test"
+        name: "normal name",
+        team: "very long team name that should be scaled down"
       },
       cleanup: {
         area: random(1000),
         volume: random(1000),
         impact: random(100000),
-        name: "laskdfjlkas asldkfja a jauaajlskdfjalksdjflk",
+        name: Math.random() > 0.5 ? "this is a very long name that should be scaled down" : "normal name",
         participants: random(1000)
       }
     });
