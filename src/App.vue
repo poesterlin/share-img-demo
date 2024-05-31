@@ -13,8 +13,8 @@ watch(type, (newType) => {
     generateShareImage(displayImage, {
       type: 'share',
       profile: {
-        name: "test",
-        team: "test"
+        name: "testalskdfjlaksjdflasdfaaj",
+        team: "testalsdkjflask"
       },
       share: {
         area: random(1000),
@@ -34,7 +34,7 @@ watch(type, (newType) => {
         area: random(1000),
         volume: random(1000),
         impact: random(100000),
-        name: "test",
+        name: "laskdfjlkas asldkfja a jauaajlskdfjalksdjflk",
         participants: random(1000)
       }
     });
